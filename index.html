@@ -472,7 +472,7 @@ input:focus, select:focus { border-color: var(--c-primary); }
   position: relative;
 }
 .settlement-arrow-line::after {
-  content: '▶'; position: absolute; right: -6px; top: -6px;
+  content: ''; position: absolute; right: -6px; top: -6px;
   font-size: 13px; color: var(--c-green);
 }
 .settlement-amount-label {
@@ -669,7 +669,7 @@ input:focus, select:focus { border-color: var(--c-primary); }
   <!-- ログイン -->
   <div id="screen-login" class="screen active" role="main">
     <div class="login-card">
-      <div class="login-logo"><div class="icon">✈️</div><h1>旅行プランナー</h1></div>
+      <div class="login-logo"><div class="icon"></div><h1>旅行プランナー</h1></div>
       <div class="form-group">
         <label class="form-label">メールアドレス</label>
         <input type="text" id="input-login-email" placeholder="example@email.com" autocomplete="email" inputmode="email">
@@ -688,7 +688,7 @@ input:focus, select:focus { border-color: var(--c-primary); }
   <!-- 新規登録 -->
   <div id="screen-register" class="screen" role="main">
     <div class="login-card">
-      <div class="login-logo"><div class="icon">✈️</div><h1>新規登録</h1></div>
+      <div class="login-logo"><div class="icon"></div><h1>新規登録</h1></div>
       <div class="form-group"><label class="form-label">メールアドレス</label><input type="text" id="input-reg-email" autocomplete="email" inputmode="email" placeholder="example@email.com"></div>
       <div class="form-group"><label class="form-label">パスワード（6文字以上）</label><input type="password" id="input-reg-password" autocomplete="new-password" placeholder="6文字以上"></div>
       <div class="form-group"><label class="form-label">パスワード（確認）</label><input type="password" id="input-reg-password2" autocomplete="new-password" placeholder="もう一度入力"></div>
@@ -700,7 +700,7 @@ input:focus, select:focus { border-color: var(--c-primary); }
   <!-- ユーザー名設定 -->
   <div id="screen-setup-name" class="screen" role="main">
     <div class="login-card">
-      <div class="login-logo"><div class="icon">👤</div><h1>ユーザー名の設定</h1></div>
+      <div class="login-logo"><div class="icon"></div><h1>ユーザー名の設定</h1></div>
       <p style="font-size:13px;color:#64748b;margin-bottom:16px;line-height:1.7;">グループ内で表示される名前を設定してください。</p>
       <div class="form-group"><label class="form-label">ユーザー名</label><input type="text" id="input-setup-name" placeholder="例: たろう、Taro など" maxlength="20"></div>
       <button class="btn btn-primary mt-8" id="btn-save-name">この名前で始める</button>
@@ -721,9 +721,9 @@ input:focus, select:focus { border-color: var(--c-primary); }
   <!-- グループ一覧 -->
   <div id="screen-group" class="screen">
     <div class="group-header">
-      <h2>🗺 グループ</h2>
+      <h2> グループ</h2>
       <div class="group-header-right">
-        <button class="darkmode-btn" id="btn-darkmode" aria-label="ダークモード切替">🌙</button>
+        <button class="darkmode-btn" id="btn-darkmode" aria-label="ダークモード切替"></button>
         <div class="user-chip">
           <span id="txt-user-status">…さん</span>
           <button class="btn btn-outline-danger btn-sm" id="btn-logout">ログアウト</button>
@@ -789,13 +789,13 @@ input:focus, select:focus { border-color: var(--c-primary); }
     <button class="btn-fab" id="btn-add-item">＋</button>
     <nav class="tab-bar">
       <div class="tab-item active" id="tab-shiori" role="tab" tabindex="0">
-        <span class="tab-icon">📅</span>しおり
+        <span class="tab-icon"></span>しおり
       </div>
       <div class="tab-item" id="tab-yukisaki" role="tab" tabindex="0">
-        <span class="tab-icon">📍</span>行き先
+        <span class="tab-icon"></span>行き先
       </div>
       <div class="tab-item" id="tab-okane" role="tab" tabindex="0">
-        <span class="tab-icon">💰</span>お金
+        <span class="tab-icon"></span>お金
       </div>
     </nav>
   </div>
@@ -823,7 +823,7 @@ input:focus, select:focus { border-color: var(--c-primary); }
         <div class="member-tag-list" id="modal-member-list"></div>
       </div>
       <button class="btn btn-primary btn-sm" id="btn-copy-invite" style="width:100%;background:#f59e0b;margin-bottom:6px;">
-        📤 LINE等で友達を招待 (URLコピー)
+         LINE等で友達を招待 (URLコピー)
       </button>
       <hr class="divider">
       <button class="btn btn-success" id="btn-save-group-settings">設定を保存する</button>
@@ -877,8 +877,8 @@ input:focus, select:focus { border-color: var(--c-primary); }
         <div class="form-group">
           <label class="form-label">割り勘の方法</label>
           <div class="split-mode-toggle">
-            <button class="split-mode-btn active" id="btn-split-even" type="button">✅ 均等割り</button>
-            <button class="split-mode-btn" id="btn-split-manual" type="button">✏️ 手動入力</button>
+            <button class="split-mode-btn active" id="btn-split-even" type="button"> 均等割り</button>
+            <button class="split-mode-btn" id="btn-split-manual" type="button"> 手動入力</button>
           </div>
           <div class="split-even-section visible" id="split-even-section">
             <div class="poll-section-label">対象者にチェック</div>
@@ -889,6 +889,18 @@ input:focus, select:focus { border-color: var(--c-primary); }
             <div class="poll-section-label">各自の負担額を入力</div>
             <div id="split-manual-inputs"></div>
             <div class="split-manual-total" id="split-manual-total"><span>入力合計</span><span>—</span></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">支払いステータス</label>
+            <select id="input-money-status">
+              <option value="paid">支払い済み</option>
+              <option value="unpaid">未払い（立て替え）</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">レシート画像</label>
+            <input type="file" id="input-money-receipt" accept="image/*" capture="environment">
+            <div id="receipt-preview" style="margin-top:8px;"></div>
           </div>
         </div>
       </div>
@@ -936,24 +948,24 @@ const COVER_COLORS = [
   '#1e293b','#475569','#92400e','#064e3b'
 ];
 const SHIORI_CATS = [
-  { id:'move',    emoji:'🚗', label:'移動',  color:'#3b82f6', bg:'#eff6ff' },
-  { id:'food',    emoji:'🍜', label:'食事',  color:'#f97316', bg:'#fff7ed' },
-  { id:'sight',   emoji:'🏯', label:'観光',  color:'#10b981', bg:'#f0fdf4' },
-  { id:'hotel',   emoji:'🏨', label:'宿泊',  color:'#8b5cf6', bg:'#f5f3ff' },
-  { id:'shop',    emoji:'🛍️', label:'買物',  color:'#ec4899', bg:'#fdf2f8' },
-  { id:'relax',   emoji:'♨️', label:'休憩',  color:'#14b8a6', bg:'#f0fdfa' },
-  { id:'event',   emoji:'🎉', label:'イベント',color:'#f59e0b', bg:'#fefce8' },
-  { id:'other',   emoji:'📌', label:'その他', color:'#64748b', bg:'#f8fafc' },
+  { id:'move',    emoji:'', label:'移動',  color:'#3b82f6', bg:'#eff6ff' },
+  { id:'food',    emoji:'', label:'食事',  color:'#f97316', bg:'#fff7ed' },
+  { id:'sight',   emoji:'', label:'観光',  color:'#10b981', bg:'#f0fdf4' },
+  { id:'hotel',   emoji:'', label:'宿泊',  color:'#8b5cf6', bg:'#f5f3ff' },
+  { id:'shop',    emoji:'', label:'買物',  color:'#ec4899', bg:'#fdf2f8' },
+  { id:'relax',   emoji:'', label:'休憩',  color:'#14b8a6', bg:'#f0fdfa' },
+  { id:'event',   emoji:'', label:'イベント',color:'#f59e0b', bg:'#fefce8' },
+  { id:'other',   emoji:'', label:'その他', color:'#64748b', bg:'#f8fafc' },
 ];
 const MONEY_CATS = [
-  { id:'food',    emoji:'🍜', label:'食費'  },
-  { id:'move',    emoji:'🚗', label:'交通'  },
-  { id:'hotel',   emoji:'🏨', label:'宿泊'  },
-  { id:'shop',    emoji:'🛍️', label:'買物'  },
-  { id:'enter',   emoji:'🎡', label:'娯楽'  },
-  { id:'drink',   emoji:'🍺', label:'飲み'  },
-  { id:'ticket',  emoji:'🎫', label:'チケット'},
-  { id:'other',   emoji:'📦', label:'その他' },
+  { id:'food',    emoji:'', label:'食費'  },
+  { id:'move',    emoji:'', label:'交通'  },
+  { id:'hotel',   emoji:'', label:'宿泊'  },
+  { id:'shop',    emoji:'', label:'買物'  },
+  { id:'enter',   emoji:'', label:'娯楽'  },
+  { id:'drink',   emoji:'', label:'飲み'  },
+  { id:'ticket',  emoji:'', label:'チケット'},
+  { id:'other',   emoji:'', label:'その他' },
 ];
 
 /* =============================================
@@ -972,7 +984,7 @@ const inviteGroupId = urlParams.get('join');
    PWA
 ============================================= */
 (function(){
-  const m = {name:"旅行プランナー",short_name:"旅プラン",start_url:"./",display:"standalone",background_color:"#0f172a",theme_color:"#38bdf8",orientation:"portrait",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='36' fill='%230ea5e9'/%3E%3Ctext x='96' y='130' font-size='110' text-anchor='middle'%3E✈️%3C/text%3E%3C/svg%3E",sizes:"192x192",type:"image/svg+xml",purpose:"any maskable"}]};
+  const m = {name:"旅行プランナー",short_name:"旅プラン",start_url:"./",display:"standalone",background_color:"#0f172a",theme_color:"#38bdf8",orientation:"portrait",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='36' fill='%230ea5e9'/%3E%3Ctext x='96' y='130' font-size='110' text-anchor='middle'%3E%3C/text%3E%3C/svg%3E",sizes:"192x192",type:"image/svg+xml",purpose:"any maskable"}]};
   const l=document.createElement('link'); l.rel='manifest'; l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/json'})); document.head.appendChild(l);
 })();
 if('serviceWorker' in navigator){
@@ -996,7 +1008,7 @@ document.getElementById('btn-darkmode').addEventListener('click', () => {
 });
 function updateDarkBtn(theme) {
   const btn = document.getElementById('btn-darkmode');
-  if (btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+  if (btn) btn.textContent = theme === 'dark' ? '' : '';
 }
 
 /* =============================================
@@ -1155,7 +1167,7 @@ function syncGroupList(){
     const c=document.getElementById('group-container');
     c.innerHTML='';
     if(snap.empty){
-      c.innerHTML=`<div class="guide-card"><div class="guide-icon">✈️</div><div class="guide-title">旅の計画をはじめよう！</div><p class="guide-desc">右下の「＋」ボタンから新しい旅行グループを作ろう！</p></div>`;
+      c.innerHTML=`<div class="guide-card"><div class="guide-icon"></div><div class="guide-title">旅の計画をはじめよう！</div><p class="guide-desc">右下の「＋」ボタンから新しい旅行グループを作ろう！</p></div>`;
       showLoading(false); return;
     }
     snap.forEach(ds=>{
@@ -1169,7 +1181,7 @@ function syncGroupList(){
         <div class="group-item-inner">
           <div class="group-item-body" data-gid="${gid}" data-gname="${escapeHtml(data.name)}">
             <div class="group-item-name">${escapeHtml(data.name)}</div>
-            <div class="group-item-meta">👤 ${memberCount}人のメンバー</div>
+            <div class="group-item-meta"> ${memberCount}人のメンバー</div>
           </div>
           <div class="menu-container">
             <button class="btn-ghost" data-menu="${gid}">⋮</button>
@@ -1413,7 +1425,7 @@ function renderShiori(container){
     const da=a.day||'1', db2=b.day||'1';
     return da!==db2?Number(da)-Number(db2):a.time.localeCompare(b.time);
   });
-  if(list.length===0){ container.innerHTML='<div class="empty-state">📅 右下の「＋」からスケジュールを追加しよう！</div>'; return; }
+  if(list.length===0){ container.innerHTML='<div class="empty-state"> 右下の「＋」からスケジュールを追加しよう！</div>'; return; }
   const days={};
   list.forEach(item=>{ const d=item.day||'1'; if(!days[d])days[d]=[]; days[d].push(item); });
   const calDiv=document.createElement('div');
@@ -1424,7 +1436,7 @@ function renderShiori(container){
     // 日程ラベル取得
     const dp=currentGroupData.datePoll;
     const dayLabel = dp?.finalValue ? `${day}日目（${dp.finalValue.split(/[〜～~\/\-]/)[0]?.trim()||''}〜）` : `${day}日目`;
-    block.innerHTML=`<div class="cal-day-header">📅 ${escapeHtml(dayLabel)}</div><div class="cal-events" id="cal-ev-${day}"></div>`;
+    block.innerHTML=`<div class="cal-day-header"> ${escapeHtml(dayLabel)}</div><div class="cal-events" id="cal-ev-${day}"></div>`;
     calDiv.appendChild(block);
     const evDiv=block.querySelector(`#cal-ev-${day}`);
     days[day].forEach(item=>{
@@ -1438,8 +1450,8 @@ function renderShiori(container){
           <div class="cal-event-text" style="margin-top:2px;">${escapeHtml(item.text)}</div>
         </div>
         <div class="cal-event-actions">
-          <button class="cal-event-btn" data-action="edit" data-id="${item.id}">✏️</button>
-          <button class="cal-event-btn" data-action="delete" data-id="${item.id}">🗑️</button>
+          <button class="cal-event-btn" data-action="edit" data-id="${item.id}"></button>
+          <button class="cal-event-btn" data-action="delete" data-id="${item.id}"></button>
         </div>`;
       evDiv.appendChild(row);
     });
@@ -1461,11 +1473,11 @@ function renderYukisaki(container){
   // ステータスバー
   const sb=document.createElement('div'); sb.className='status-bar';
   sb.innerHTML=`
-    <div class="status-cell"><div class="status-cell-label">📅 日程</div><div class="status-cell-value ${datePoll.finalValue?'status-done':'status-active'}">${escapeHtml(datePoll.finalValue||'投票中')}</div></div>
+    <div class="status-cell"><div class="status-cell-label"> 日程</div><div class="status-cell-value ${datePoll.finalValue?'status-done':'status-active'}">${escapeHtml(datePoll.finalValue||'投票中')}</div></div>
     <div class="status-divider"></div>
-    <div class="status-cell"><div class="status-cell-label">💴 予算</div><div class="status-cell-value ${budgetPoll.finalValue?'status-done':datePoll.finalValue?'status-active':'status-waiting'}">${escapeHtml(budgetPoll.finalValue||(datePoll.finalValue?'投票中':'待機'))}</div></div>
+    <div class="status-cell"><div class="status-cell-label"> 予算</div><div class="status-cell-value ${budgetPoll.finalValue?'status-done':datePoll.finalValue?'status-active':'status-waiting'}">${escapeHtml(budgetPoll.finalValue||(datePoll.finalValue?'投票中':'待機'))}</div></div>
     <div class="status-divider"></div>
-    <div class="status-cell"><div class="status-cell-label">📍 行先</div><div class="status-cell-value ${destPoll.finalValue?'status-done':budgetPoll.finalValue?'status-active':'status-waiting'}">${escapeHtml(destPoll.finalValue||(budgetPoll.finalValue?'投票中':'待機'))}</div></div>`;
+    <div class="status-cell"><div class="status-cell-label"> 行先</div><div class="status-cell-value ${destPoll.finalValue?'status-done':budgetPoll.finalValue?'status-active':'status-waiting'}">${escapeHtml(destPoll.finalValue||(budgetPoll.finalValue?'投票中':'待機'))}</div></div>`;
   container.appendChild(sb);
   if(!datePoll.finalValue) container.appendChild(buildPollCard('date','Step 1: 日程を決めよう！','いつ行くか候補を出し合って投票！',datePoll,'例: 8/11〜8/13'));
   else if(!budgetPoll.finalValue){ container.appendChild(buildConfirmedBanner(`日程: ${datePoll.finalValue}`,()=>resetStep('date'))); container.appendChild(buildPollCard('budget','Step 2: 予算を決めよう！','1人あたりの予算感を決めましょう',budgetPoll,'例: 3万円以内')); }
@@ -1473,10 +1485,10 @@ function renderYukisaki(container){
   else {
     const summary=document.createElement('div');
     summary.style.cssText='background:#f0fdf4;border:1px solid #bbf7d0;border-left:4px solid #10b981;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.8;margin-bottom:14px;';
-    summary.innerHTML=`<div style="font-weight:700;color:#059669;margin-bottom:6px;">✅ すべて確定！</div><div>📅 ${escapeHtml(datePoll.finalValue)}</div><div>💴 ${escapeHtml(budgetPoll.finalValue)}</div><div>📍 <strong style="color:#0284c7;font-size:15px;">${escapeHtml(destPoll.finalValue)}</strong></div><div style="text-align:right;margin-top:6px;"><button class="btn btn-sm" style="background:#94a3b8;color:#fff;" id="btn-reset-dest">やり直す</button></div>`;
+    summary.innerHTML=`<div style="font-weight:700;color:#059669;margin-bottom:6px;"> すべて確定！</div><div> ${escapeHtml(datePoll.finalValue)}</div><div> ${escapeHtml(budgetPoll.finalValue)}</div><div> <strong style="color:#0284c7;font-size:15px;">${escapeHtml(destPoll.finalValue)}</strong></div><div style="text-align:right;margin-top:6px;"><button class="btn btn-sm" style="background:#94a3b8;color:#fff;" id="btn-reset-dest">やり直す</button></div>`;
     container.appendChild(summary);
     document.getElementById('btn-reset-dest')?.addEventListener('click',()=>resetStep('destination'));
-    const h4=document.createElement('h4'); h4.style.cssText='font-size:14px;margin-bottom:10px;'; h4.textContent=`📍 ${destPoll.finalValue} で行きたいスポット（いいね順）`; container.appendChild(h4);
+    const h4=document.createElement('h4'); h4.style.cssText='font-size:14px;margin-bottom:10px;'; h4.textContent=` ${destPoll.finalValue} で行きたいスポット（いいね順）`; container.appendChild(h4);
     const list=[...(currentGroupData.yukisaki||[])].sort((a,b)=>(b.likes||[]).length-(a.likes||[]).length);
     if(list.length===0) container.innerHTML+='<div class="empty-state">右下の「＋」でスポットを追加しよう！</div>';
     list.forEach(item=>{
@@ -1484,11 +1496,11 @@ function renderYukisaki(container){
       const mapQ=encodeURIComponent(item.name);
       const div=document.createElement('div'); div.className='list-item';
       div.innerHTML=`
-        <button class="btn-like ${isLiked?'liked':''}" data-spotid="${item.id}"><span>${isLiked?'❤️':'🤍'}</span><span>${likes.length}</span></button>
+        <button class="btn-like ${isLiked?'liked':''}" data-spotid="${item.id}"><span>${isLiked?'':''}</span><span>${likes.length}</span></button>
         <div class="item-data" style="padding-left:6px;">
           <strong>${escapeHtml(item.name)}</strong>
-          ${item.url?`<br><a href="${escapeHtml(item.url)}" target="_blank" class="spot-map-btn">🔗 参考リンク</a>`:''}
-          <br><a href="https://maps.google.com/maps?q=${mapQ}" target="_blank" class="spot-map-btn">🗺 地図で見る</a>
+          ${item.url?`<br><a href="${escapeHtml(item.url)}" target="_blank" class="spot-map-btn"> 参考リンク</a>`:''}
+          <br><a href="https://maps.google.com/maps?q=${mapQ}" target="_blank" class="spot-map-btn"> 地図で見る</a>
         </div>
         <div class="menu-container">
           <button class="btn-ghost" data-menu="${item.id}">⋮</button>
@@ -1558,7 +1570,7 @@ function renderOkane(container){
     const routes=calcSettlement(diffMap, currentGroupData.memberNames||{});
     if(routes.length>0){
       const g=document.createElement('div'); g.className='settlement-graph';
-      g.innerHTML='<div class="settlement-graph-title">💸 おすすめの清算方法</div>';
+      g.innerHTML='<div class="settlement-graph-title"> おすすめの清算方法</div>';
       routes.forEach(r=>{
         const fromColor=getMemberColorByName(r.fromId);
         const toColor=getMemberColorByName(r.toId);
@@ -1580,13 +1592,13 @@ function renderOkane(container){
       });
       container.appendChild(g);
     } else if(total>0){
-      const p=document.createElement('p'); p.style.cssText='font-size:13px;color:var(--c-green);text-align:center;padding:8px;'; p.textContent='✅ 清算不要！全員均等です。'; container.appendChild(p);
+      const p=document.createElement('p'); p.style.cssText='font-size:13px;color:var(--c-green);text-align:center;padding:8px;'; p.textContent=' 清算不要！全員均等です。'; container.appendChild(p);
     }
   }
 
   // 支払い履歴
   const h4=document.createElement('h4'); h4.style.cssText='font-size:13px;font-weight:700;color:var(--c-muted);margin:14px 0 8px;'; h4.textContent='支払い履歴'; container.appendChild(h4);
-  if(okaneList.length===0){ container.innerHTML+='<div class="empty-state">💰 右下の「＋」から支払いを記録しよう！</div>'; return; }
+  if(okaneList.length===0){ container.innerHTML+='<div class="empty-state"> 右下の「＋」から支払いを記録しよう！</div>'; return; }
   [...okaneList].reverse().forEach(item=>{
     const payerName=currentGroupData.memberNames[item.uid]||'不明';
     const payerColor=getMemberColor(item.uid);
@@ -1662,7 +1674,7 @@ function buildPollCard(type, title, desc, poll, placeholder){
       optsHTML+=`<div class="poll-option ${voted?'voted':''}">
         <div class="poll-option-info"><div class="poll-option-name">${escapeHtml(opt.name)}</div><div class="poll-option-votes">${votes.length}票 (${pct}%)</div><div class="poll-option-bar"><div class="poll-option-bar-fill" style="width:${pct}%"></div></div></div>
         <div class="poll-option-actions">
-          <button class="btn btn-sm ${voted?'btn-success':'btn-primary'}" data-action="vote" data-type="${type}" data-optid="${opt.id}" ${expired?'disabled style="background:#cbd5e1;"':''}>${voted?'✅':'投票'}</button>
+          <button class="btn btn-sm ${voted?'btn-success':'btn-primary'}" data-action="vote" data-type="${type}" data-optid="${opt.id}" ${expired?'disabled style="background:#cbd5e1;"':''}>${voted?'':'投票'}</button>
           <button class="btn btn-sm" style="background:#f59e0b;color:#fff;" data-action="finalize" data-type="${type}" data-optname="${escapeHtml(opt.name)}">確定</button>
           <button class="btn btn-sm btn-danger" data-action="del-option" data-type="${type}" data-optid="${opt.id}">削</button>
         </div>
@@ -1671,7 +1683,7 @@ function buildPollCard(type, title, desc, poll, placeholder){
   } else optsHTML='<p style="font-size:13px;color:var(--c-muted);text-align:center;padding:12px 0;">候補がまだありません</p>';
   const dlClass=!poll.deadline?'none':expired?'expired':'active';
   const dlText=!poll.deadline?'未設定':`${poll.deadline.replace('T',' ')} ${expired?'（締切）':''}`;
-  card.innerHTML=`<div class="poll-title">${title}</div><div class="poll-desc">${desc}</div><div class="poll-deadline ${dlClass}">⏰ 期限: ${dlText}</div>${optsHTML}
+  card.innerHTML=`<div class="poll-title">${title}</div><div class="poll-desc">${desc}</div><div class="poll-deadline ${dlClass}"> 期限: ${dlText}</div>${optsHTML}
     <hr class="poll-separator">
     <div class="poll-section-label">候補を追加</div>
     <div class="poll-row"><input type="text" id="input-poll-${type}" placeholder="${placeholder}"><button class="btn btn-primary btn-sm" data-action="add-option" data-type="${type}">追加</button></div>
@@ -1759,7 +1771,7 @@ function updateManualTotal(){
   let sum=0; document.querySelectorAll('#split-manual-inputs input[data-uid]').forEach(inp=>sum+=parseInt(inp.value)||0);
   const el=document.getElementById('split-manual-total'), diff=sum-total;
   if(total===0) el.innerHTML='<span>入力合計</span><span>金額を入力してください</span>';
-  else if(diff===0) el.innerHTML=`<span>入力合計</span><span class="total-ok">¥${sum.toLocaleString()} ✅ ぴったり！</span>`;
+  else if(diff===0) el.innerHTML=`<span>入力合計</span><span class="total-ok">¥${sum.toLocaleString()}  ぴったり！</span>`;
   else el.innerHTML=`<span>入力合計</span><span class="total-ng">¥${sum.toLocaleString()} (${diff>0?'+':''}${diff.toLocaleString()}円 ズレあり)</span>`;
 }
 document.getElementById('input-money-amount').addEventListener('input',()=>{ if(splitMode==='even')updateEvenPreview(); else updateManualTotal(); });
