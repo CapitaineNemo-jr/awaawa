@@ -655,6 +655,9 @@ input:focus, select:focus { border-color: var(--c-primary); }
 .reset-card {
   background: #fff; border-radius: var(--radius-lg); padding: 28px 22px; box-shadow: var(--shadow-lg);
 }
+.money-status-badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+    .status-paid { background: #dcfce7; color: #166534; }
+    .status-unpaid { background: #fee2e2; color: #991b1b; }
   </style>
 </head>
 <body>
@@ -897,6 +900,7 @@ input:focus, select:focus { border-color: var(--c-primary); }
               <option value="unpaid">未払い（立て替え）</option>
             </select>
           </div>
+            <!-- 追加：レシート添付用UI -->
           <div class="form-group">
             <label class="form-label">レシート画像</label>
             <input type="file" id="input-money-receipt" accept="image/*" capture="environment">
@@ -1523,7 +1527,7 @@ function renderYukisaki(container){
 }
 
 /* ---- お金 ---- */
-function renderOkane(container){
+/*function renderOkane(container){
   const memberIds=Object.keys(currentGroupData.memberNames||{});
   const okaneList=currentGroupData.okane||[];
   let total=0;
@@ -1538,7 +1542,25 @@ function renderOkane(container){
       const share=Math.round(e.amount/memberIds.length);
       memberIds.forEach(id=>{ memberOwes[id]+=share; });
     }
-  });
+  });*/
+  function renderOkane(container) {
+    const budget = currentGroupData.budget || 0;
+    const total = (currentGroupData.okane || []).reduce((sum, item) => sum + (item.amount || 0), 0);
+    const remaining = budget - total;
+
+    const summaryDiv = document.createElement('div');
+    summaryDiv.className = 'money-summary';
+    summaryDiv.innerHTML = `
+      <div class="money-summary-row"><span>合計支出</span><span>予算残額</span></div>
+      <div class="money-summary-row">
+        <span class="money-summary-total">¥${total.toLocaleString()}</span>
+        <span class="money-summary-total" style="color:${remaining < 0 ? '#ef4444' : '#fff'};">
+          ¥${remaining.toLocaleString()}
+        </span>
+      </div>
+      <div style="font-size:11px; margin-top:8px; opacity:0.8;">目標予算: ¥${budget.toLocaleString()}</div>
+    `;
+    container.appendChild(summaryDiv);
   const diffMap={};
   memberIds.forEach(id=>diffMap[id]=memberPaid[id]-memberOwes[id]);
   const perPerson=memberIds.length>0?Math.round(total/memberIds.length):0;
@@ -1859,6 +1881,8 @@ document.getElementById('btn-cancel-item').addEventListener('click',()=>document
 
 async function saveItem(){
   const idInput=document.getElementById('edit-id').value;
+  const status = document.getElementById('input-money-status').value;
+  const entry = { id: itemId, uid, amount, text, cat, splits, status };
   const isEdit=idInput!=='', itemId=isEdit?idInput:'item_'+Date.now();
   let shioriList=[...(currentGroupData.shiori||[])];
   let yukisakiList=[...(currentGroupData.yukisaki||[])];
