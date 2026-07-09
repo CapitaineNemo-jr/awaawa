@@ -1370,699 +1370,362 @@ const db   = getFirestore(app);
 
 
 /* =============================================
-
    定数・マスターデータ
-
 ============================================= */
-
 const MEMBER_COLORS = [
-
   '#ef4444','#f97316','#f59e0b','#22c55e',
-
   '#10b981','#14b8a6','#0ea5e9','#6366f1',
-
   '#8b5cf6','#ec4899','#64748b','#1e293b'
-
 ];
-
 const COVER_COLORS = [
-
   '#0ea5e9','#6366f1','#10b981','#f59e0b',
-
   '#ef4444','#ec4899','#8b5cf6','#14b8a6',
-
   '#1e293b','#475569','#92400e','#064e3b'
-
 ];
-
 const SHIORI_CATS = [
-
   { id:'move',    emoji:'', label:'移動',  color:'#3b82f6', bg:'#eff6ff' },
-
   { id:'food',    emoji:'', label:'食事',  color:'#f97316', bg:'#fff7ed' },
-
   { id:'sight',   emoji:'', label:'観光',  color:'#10b981', bg:'#f0fdf4' },
-
   { id:'hotel',   emoji:'', label:'宿泊',  color:'#8b5cf6', bg:'#f5f3ff' },
-
   { id:'shop',    emoji:'', label:'買物',  color:'#ec4899', bg:'#fdf2f8' },
-
   { id:'relax',   emoji:'', label:'休憩',  color:'#14b8a6', bg:'#f0fdfa' },
-
   { id:'event',   emoji:'', label:'イベント',color:'#f59e0b', bg:'#fefce8' },
-
   { id:'other',   emoji:'', label:'その他', color:'#64748b', bg:'#f8fafc' },
-
 ];
-
 const MONEY_CATS = [
-
   { id:'food',    emoji:'', label:'食費'  },
-
   { id:'move',    emoji:'', label:'交通'  },
-
   { id:'hotel',   emoji:'', label:'宿泊'  },
-
   { id:'shop',    emoji:'', label:'買物'  },
-
   { id:'enter',   emoji:'', label:'娯楽'  },
-
   { id:'drink',   emoji:'', label:'飲み'  },
-
   { id:'ticket',  emoji:'', label:'チケット'},
-
   { id:'other',   emoji:'', label:'その他' },
-
 ];
-
-
 
 /* =============================================
-
    状態変数
-
 ============================================= */
-
 let myUID = '', loginUserName = '', currentGroupId = '';
-
 let currentTab = 'しおり', splitMode = 'even';
-
 let createTempMembers = [], tempMembers = {};
-
 let tempMemberColors = {}; // uid→color
-
 let currentGroupData = null;
-
 let groupListUnsubscribe = null, activeGroupUnsubscribe = null;
-
 const urlParams = new URLSearchParams(window.location.search);
-
 const inviteGroupId = urlParams.get('join');
 
-
-
 /* =============================================
-
    PWA
-
 ============================================= */
-
 (function(){
-
   const m = {name:"旅行プランナー",short_name:"旅プラン",start_url:"./",display:"standalone",background_color:"#0f172a",theme_color:"#38bdf8",orientation:"portrait",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='36' fill='%230ea5e9'/%3E%3Ctext x='96' y='130' font-size='110' text-anchor='middle'%3E%3C/text%3E%3C/svg%3E",sizes:"192x192",type:"image/svg+xml",purpose:"any maskable"}]};
-
   const l=document.createElement('link'); l.rel='manifest'; l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/json'})); document.head.appendChild(l);
-
 })();
-
 if('serviceWorker' in navigator){
-
   const c=`const N='trip-p1';self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==N).map(x=>caches.delete(x)))));self.clients.claim();});self.addEventListener('fetch',e=>{if(e.request.url.includes('firebase')||e.request.url.includes('googleapis')||e.request.url.includes('gstatic'))return;e.respondWith(caches.match(e.request).then(r=>{if(r)return r;return fetch(e.request).then(res=>{if(!res||res.status!==200||res.type!=='basic')return res;const cl=res.clone();caches.open(N).then(c=>c.put(e.request,cl));return res;});}));});`;
-
   navigator.serviceWorker.register(URL.createObjectURL(new Blob([c],{type:'application/javascript'}))).catch(()=>{});
-
 }
 
-
-
 /* =============================================
-
    ダークモード
-
 ============================================= */
-
 const savedTheme = localStorage.getItem('theme') || 'light';
-
 document.documentElement.setAttribute('data-theme', savedTheme);
-
 updateDarkBtn(savedTheme);
 
-
-
 document.getElementById('btn-darkmode').addEventListener('click', () => {
-
   const cur = document.documentElement.getAttribute('data-theme');
-
   const next = cur === 'dark' ? 'light' : 'dark';
-
   document.documentElement.setAttribute('data-theme', next);
-
   localStorage.setItem('theme', next);
-
   updateDarkBtn(next);
-
 });
-
 function updateDarkBtn(theme) {
-
   const btn = document.getElementById('btn-darkmode');
-
   if (btn) btn.textContent = theme === 'dark' ? '' : '';
-
 }
-
-
 
 /* =============================================
-
    ユーティリティ
-
 ============================================= */
-
 function showLoading(v){ document.getElementById('loading').classList.toggle('active',v); }
-
 function showToast(msg, type='info', dur=3000){
-
   const el = document.createElement('div');
-
   el.className=`toast ${type}`; el.textContent=msg;
-
   document.getElementById('toast-container').appendChild(el);
-
   setTimeout(()=>{ el.classList.add('fade-out'); el.addEventListener('animationend',()=>el.remove()); }, dur);
-
 }
-
 function navigateTo(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); closeAllMenus(); }
-
 function closeAllMenus(){ document.querySelectorAll('.dropdown-menu').forEach(m=>m.classList.remove('show')); }
-
 function escapeHtml(s){ if(s==null)return''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 
-
 // メンバーカラーを取得（グループデータから）
-
 function getMemberColor(uid){
-
   return (currentGroupData?.memberColors || {})[uid] || MEMBER_COLORS[Object.keys(currentGroupData?.memberNames||{}).indexOf(uid) % MEMBER_COLORS.length] || '#64748b';
-
 }
 
 // イニシャル
-
 function getInitial(name){ return name ? name.charAt(0) : '?'; }
 
 // しおりカテゴリ取得
-
 function getShioriCat(id){ return SHIORI_CATS.find(c=>c.id===id) || SHIORI_CATS[SHIORI_CATS.length-1]; }
 
 // お金カテゴリ取得
-
 function getMoneyCat(id){ return MONEY_CATS.find(c=>c.id===id) || MONEY_CATS[MONEY_CATS.length-1]; }
 
 
-
 /* =============================================
-
    カバーカラースウォッチ描画（共通）
 
 ============================================= */
-
 function renderCoverSwatches(containerId, hiddenId) {
-
   const container = document.getElementById(containerId);
-
   const hidden    = document.getElementById(hiddenId);
-
   container.innerHTML = '';
-
   COVER_COLORS.forEach(color => {
-
     const btn = document.createElement('div');
-
     btn.className = 'cover-swatch' + (hidden.value === color ? ' selected' : '');
-
     btn.style.background = color;
-
     btn.addEventListener('click', () => {
-
       hidden.value = color;
-
       container.querySelectorAll('.cover-swatch').forEach(s=>s.classList.remove('selected'));
-
       btn.classList.add('selected');
-
     });
-
     container.appendChild(btn);
-
   });
-
 }
 
-
-
 /* =============================================
-
    カテゴリグリッド描画
-
 ============================================= */
-
 function renderShioriCatGrid(selectedId = 'other'){
-
   const grid = document.getElementById('shiori-cat-grid');
-
   grid.innerHTML = '';
-
   SHIORI_CATS.forEach(cat => {
-
     const btn = document.createElement('button');
-
     btn.type = 'button';
-
     btn.className = 'cat-select-btn' + (cat.id === selectedId ? ' selected' : '');
-
     btn.innerHTML = `<span class="cat-emoji">${cat.emoji}</span>${cat.label}`;
-
     btn.addEventListener('click', () => {
-
       grid.querySelectorAll('.cat-select-btn').forEach(b=>b.classList.remove('selected'));
-
       btn.classList.add('selected');
-
       document.getElementById('input-shiori-cat').value = cat.id;
-
     });
-
     grid.appendChild(btn);
-
   });
-
 }
-
 function renderMoneyCatGrid(selectedId = 'other'){
-
   const grid = document.getElementById('money-cat-grid');
-
   grid.innerHTML = '';
-
   MONEY_CATS.forEach(cat => {
-
     const btn = document.createElement('button');
-
     btn.type = 'button';
-
     btn.className = 'money-cat-btn' + (cat.id === selectedId ? ' selected' : '');
-
     btn.innerHTML = `<span class="cat-emoji">${cat.emoji}</span>${cat.label}`;
-
     btn.addEventListener('click', () => {
-
       grid.querySelectorAll('.money-cat-btn').forEach(b=>b.classList.remove('selected'));
-
       btn.classList.add('selected');
-
       document.getElementById('input-money-cat').value = cat.id;
-
     });
-
     grid.appendChild(btn);
-
   });
-
 }
-
 
 
 /* =============================================
-
    認証
-
 ============================================= */
-
 onAuthStateChanged(auth, async user => {
-
   showLoading(true);
-
   if(user){
-
     myUID = user.uid;
-
     const ud = await getDoc(doc(db,'users',myUID));
-
     if(ud.exists()){
-
       loginUserName = ud.data().name;
-
       document.getElementById('txt-user-status').textContent = `${loginUserName} さん`;
-
       if(inviteGroupId) await joinGroupViaLink(inviteGroupId); else goToGroupScreen();
-
     } else { navigateTo('screen-setup-name'); showLoading(false); }
-
   } else {
-
     myUID = loginUserName = '';
-
     document.getElementById('input-login-email').value = '';
-
     document.getElementById('input-login-password').value = '';
-
     if(groupListUnsubscribe){ groupListUnsubscribe(); groupListUnsubscribe=null; }
-
     if(activeGroupUnsubscribe){ activeGroupUnsubscribe(); activeGroupUnsubscribe=null; }
-
     navigateTo('screen-login'); showLoading(false);
-
   }
-
 });
-
-
 
 document.getElementById('btn-login').addEventListener('click', async () => {
-
   const email=document.getElementById('input-login-email').value.trim();
-
   const pw=document.getElementById('input-login-password').value;
-
   if(!email||!pw) return showToast('メールアドレスとパスワードを入力してください','warning');
-
   showLoading(true);
-
   try{ await signInWithEmailAndPassword(auth,email,pw); }
-
   catch(err){ showToast({'auth/invalid-credential':'メールアドレスまたはパスワードが違います'}[err.code]||'ログインに失敗しました','error'); showLoading(false); }
-
 });
-
 document.getElementById('btn-go-register').addEventListener('click',()=>{ ['input-reg-email','input-reg-password','input-reg-password2'].forEach(id=>document.getElementById(id).value=''); navigateTo('screen-register'); });
-
 document.getElementById('btn-back-to-login-from-register').addEventListener('click',()=>navigateTo('screen-login'));
-
 document.getElementById('btn-register').addEventListener('click', async()=>{
-
   const email=document.getElementById('input-reg-email').value.trim();
-
   const pw=document.getElementById('input-reg-password').value;
-
   const pw2=document.getElementById('input-reg-password2').value;
-
   if(!email||!pw) return showToast('メールアドレスとパスワードを入力してください','warning');
-
   if(pw.length<6) return showToast('パスワードは6文字以上','warning');
-
   if(pw!==pw2) return showToast('パスワードが一致しません','warning');
-
   showLoading(true);
-
   try{ await createUserWithEmailAndPassword(auth,email,pw); }
-
   catch(err){ showToast({'auth/email-already-in-use':'このメールアドレスは既に登録されています'}[err.code]||'登録に失敗しました','error'); showLoading(false); }
-
 });
-
 document.getElementById('btn-save-name').addEventListener('click', async()=>{
-
   const name=document.getElementById('input-setup-name').value.trim();
-
   if(!name) return showToast('ユーザー名を入力してください','warning');
-
   showLoading(true);
-
   try{ await setDoc(doc(db,'users',myUID),{name,email:auth.currentUser?.email||''}); loginUserName=name; document.getElementById('txt-user-status').textContent=`${name} さん`; if(inviteGroupId) await joinGroupViaLink(inviteGroupId); else goToGroupScreen(); }
-
   catch{ showToast('保存に失敗しました','error'); showLoading(false); }
 
 });
-
 document.getElementById('btn-logout').addEventListener('click', async()=>{ if(!confirm('ログアウトしますか？'))return; showLoading(true); try{await signOut(auth);}catch{showToast('ログアウト失敗','error');showLoading(false);} });
-
 document.getElementById('btn-forgot').addEventListener('click',()=>{ document.getElementById('input-reset-email').value=document.getElementById('input-login-email').value; navigateTo('screen-reset'); });
-
 document.getElementById('btn-back-to-login').addEventListener('click',()=>navigateTo('screen-login'));
-
 document.getElementById('btn-send-reset').addEventListener('click', async()=>{
-
   const email=document.getElementById('input-reset-email').value.trim();
-
   if(!email) return showToast('メールアドレスを入力してください','warning');
-
   showLoading(true);
-
   try{ await sendPasswordResetEmail(auth,email); showToast('リセットメールを送信しました','success',5000); navigateTo('screen-login'); }
-
   catch(err){ showToast(err.message,'error'); } finally{ showLoading(false); }
-
 });
 
-
-
 /* =============================================
-
    グループ管理
-
 ============================================= */
-
 function goToGroupScreen(){ navigateTo('screen-group'); syncGroupList(); }
 
-
-
 function syncGroupList(){
-
   if(groupListUnsubscribe) groupListUnsubscribe();
-
   showLoading(true);
-
   const q=query(collection(db,'groups'),where('members','array-contains',myUID));
-
   groupListUnsubscribe=onSnapshot(q, snap=>{
-
     const c=document.getElementById('group-container');
-
     c.innerHTML='';
-
     if(snap.empty){
-
       c.innerHTML=`<div class="guide-card"><div class="guide-icon"></div><div class="guide-title">旅の計画をはじめよう！</div><p class="guide-desc">右下の「＋」ボタンから新しい旅行グループを作ろう！</p></div>`;
 
       showLoading(false); return;
-
     }
-
     snap.forEach(ds=>{
-
       const data=ds.data(), gid=ds.id;
-
       const coverColor = data.coverColor || '#0ea5e9';
-
       const memberCount=Object.keys(data.memberNames||{}).length;
-
       const div=document.createElement('div');
-
       div.className='group-item';
-
       div.innerHTML=`
-
         <div class="group-cover" style="background:${coverColor};"></div>
-
         <div class="group-item-inner">
-
           <div class="group-item-body" data-gid="${gid}" data-gname="${escapeHtml(data.name)}">
-
             <div class="group-item-name">${escapeHtml(data.name)}</div>
-
             <div class="group-item-meta"> ${memberCount}人のメンバー</div>
-
           </div>
-
           <div class="menu-container">
-
             <button class="btn-ghost" data-menu="${gid}">⋮</button>
-
             <div class="dropdown-menu" id="menu-${gid}">
-
               <div data-action="edit-group" data-gid="${gid}" data-gname="${escapeHtml(data.name)}">編集</div>
-
               <div class="menu-delete" data-action="delete-group" data-gid="${gid}">削除</div>
-
             </div>
-
           </div>
-
         </div>`;
-
       c.appendChild(div);
-
     });
-
     showLoading(false);
-
   });
-
 }
-
-
 
 document.getElementById('group-container').addEventListener('click', e=>{
-
   const body=e.target.closest('.group-item-body');
-
   const menuBtn=e.target.closest('[data-menu]');
-
   const action=e.target.closest('[data-action]');
-
   if(body) openGroup(body.dataset.gid, body.dataset.gname);
-
   if(menuBtn){ e.stopPropagation(); const m=document.getElementById(`menu-${menuBtn.dataset.menu}`); const open=m.classList.contains('show'); closeAllMenus(); if(!open)m.classList.add('show'); }
-
   if(action){ e.stopPropagation();
-
     if(action.dataset.action==='edit-group') openGroupEditModal(action.dataset.gid, action.dataset.gname);
-
     if(action.dataset.action==='delete-group') deleteGroup(action.dataset.gid);
-
   }
-
 });
-
-
 
 document.getElementById('btn-open-create-group').addEventListener('click',()=>toggleGroupModal(true));
-
 function toggleGroupModal(show){
-
   const modal=document.getElementById('group-modal');
-
   if(show){
-
     document.getElementById('new-group-name').value='';
-
     document.getElementById('create-cover-color').value='#0ea5e9';
-
     renderCoverSwatches('create-cover-colors','create-cover-color');
-
     createTempMembers=[{id:myUID, name:loginUserName}];
-
     renderCreateMembers();
-
     modal.classList.add('active');
-
   } else modal.classList.remove('active');
-
 }
-
-
 
 function renderCreateMembers(){
-
   const list=document.getElementById('create-member-list');
-
   list.innerHTML='';
-
   createTempMembers.forEach((m,i)=>{
-
     const tag=document.createElement('div');
-
     tag.className='member-tag';
-
     tag.innerHTML=escapeHtml(m.name)+(m.id!==myUID?` <button class="btn-del-member" data-idx="${i}">×</button>`:'');
-
     list.appendChild(tag);
-
   });
-
 }
-
 document.getElementById('create-member-list').addEventListener('click',e=>{ const b=e.target.closest('.btn-del-member'); if(b){createTempMembers.splice(parseInt(b.dataset.idx),1);renderCreateMembers();} });
-
 document.getElementById('btn-add-member-create').addEventListener('click',()=>{
-
   const input=document.getElementById('create-member-name-input');
-
   const name=input.value.trim(); if(!name)return;
-
   createTempMembers.push({id:'dummy_'+Date.now()+'_'+Math.random().toString(36).substr(2,4), name});
-
   input.value=''; renderCreateMembers();
-
 });
-
 document.getElementById('btn-create-group').addEventListener('click', async()=>{
-
   const groupName=document.getElementById('new-group-name').value.trim();
-
   if(!groupName) return showToast('グループ名を入力してください','warning');
-
   const coverColor=document.getElementById('create-cover-color').value;
-
   showLoading(true);
-
   const ref=doc(collection(db,'groups'));
-
   const members=[], memberNames={}, memberColors={};
-
   createTempMembers.forEach((m,i)=>{ members.push(m.id); memberNames[m.id]=m.name; memberColors[m.id]=MEMBER_COLORS[i%MEMBER_COLORS.length]; });
-
   await setDoc(ref,{name:groupName, coverColor, members, memberNames, memberColors, shiori:[], yukisaki:[], okane:[]});
-
   toggleGroupModal(false);
-
   openGroup(ref.id, groupName);
-
 });
-
 document.getElementById('btn-cancel-create-group').addEventListener('click',()=>toggleGroupModal(false));
 
-
-
 function openGroupEditModal(gid, name){
-
   closeAllMenus();
-
   document.getElementById('edit-group-id').value=gid;
-
   document.getElementById('input-edit-group-name').value=name;
-
   document.getElementById('group-edit-modal').classList.add('active');
-
 }
-
 document.getElementById('btn-save-group-edit').addEventListener('click', async()=>{
-
   const gid=document.getElementById('edit-group-id').value;
-
   const n=document.getElementById('input-edit-group-name').value.trim();
-
   if(!n) return showToast('グループ名を入力してください','warning');
-
   showLoading(true);
-
   await updateDoc(doc(db,'groups',gid),{name:n});
-
   document.getElementById('group-edit-modal').classList.remove('active');
-
   showLoading(false); showToast('グループ名を更新しました','success');
 
 });
-
 document.getElementById('btn-close-group-edit').addEventListener('click',()=>document.getElementById('group-edit-modal').classList.remove('active'));
 
-
-
 async function deleteGroup(gid){
-
   closeAllMenus();
-
   if(!confirm('本当にこのグループを削除しますか？\nすべてのデータが消去されます。'))return;
-
   showLoading(true);
-
   try{ await deleteDoc(doc(db,'groups',gid)); showToast('グループを削除しました','info'); }
-
   catch{ showToast('削除に失敗しました','error'); } finally{ showLoading(false); }
-
 }
 
-
-
 async function joinGroupViaLink(groupId){
-
   try{
-
     const ref=doc(db,'groups',groupId), snap=await getDoc(ref);
-
     if(snap.exists()){
 
       const upd={members:arrayUnion(myUID)}; upd[`memberNames.${myUID}`]=loginUserName;
@@ -2073,74 +1736,45 @@ async function joinGroupViaLink(groupId){
 
       window.history.replaceState({},document.title,window.location.pathname);
 
-      openGroup(groupId,snap.data().name);
+      openGroup(groupId,snap.data().name)
 
     } else { showToast('グループが見つかりません','error'); goToGroupScreen(); }
-
-  } catch{ showToast('参加に失敗しました','error'); goToGroupScreen(); }
+ } catch{ showToast('参加に失敗しました','error'); goToGroupScreen(); }
 
 }
 
-
-
-/* =============================================
+/* ============================================
 
    メイン画面
-
 ============================================= */
-
 function openGroup(groupId, groupName){
-
-  currentGroupId=groupId;
+  currentGroupId=groupId
 
   document.getElementById('current-group-title').textContent=groupName;
-
   navigateTo('screen-main');
-
   if(activeGroupUnsubscribe) activeGroupUnsubscribe();
-
   activeGroupUnsubscribe=onSnapshot(doc(db,'groups',groupId), ds=>{
-
     if(!ds.exists())return;
-
-    currentGroupData=ds.data();
+    currentGroupDat=ds.data();
 
     renderContent();
-
   });
-
 }
 
-
-
 document.getElementById('btn-back').addEventListener('click', goToGroupScreen);
-
 document.getElementById('btn-back').addEventListener('keydown', e=>{ if(e.key==='Enter')goToGroupScreen(); });
 
-
-
 document.getElementById('btn-header-menu').addEventListener('click', e=>{
-
   e.stopPropagation();
-
   const m=document.getElementById('menu-header');
-
   const open=m.classList.contains('show'); closeAllMenus(); if(!open)m.classList.add('show');
-
 });
 
-
-
 /* グループ設定 */
-
 document.getElementById('btn-open-group-settings').addEventListener('click',()=>{
-
   closeAllMenus();
-
   document.getElementById('edit-group-name-input').value=currentGroupData.name;
-
   const coverColor=currentGroupData.coverColor||'#0ea5e9';
-
   document.getElementById('settings-cover-color').value=coverColor;
   renderCoverSwatches('settings-cover-colors','settings-cover-color');
   tempMembers={...currentGroupData.memberNames};
